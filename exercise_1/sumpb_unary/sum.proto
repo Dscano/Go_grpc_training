@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package sum;
+option go_package ="sumpb";
+
+message Sum{
+	repeated int32 number = 1;
+}
+
+message SumRequest{
+	Sum summing = 1 ;
+}
+
+message SumResponse{
+	int32 result = 1 ;
+}
+
+service SumService{
+	//Unary
+	rpc Sum(SumRequest) returns (SumResponse){};
+}
