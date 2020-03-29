@@ -10,8 +10,6 @@ It is generated from these files:
 
 It has these top-level messages:
 	Greeting
-	GreetRequest
-	GreetResponse
 	GreetManyTimesRequest
 	GreetManyTimesResponse
 */
@@ -61,38 +59,14 @@ func (m *Greeting) GetLastName() string {
 	return ""
 }
 
-type GreetRequest struct {
-	Greeting *Greeting `protobuf:"bytes,1,opt,name=greeting" json:"greeting,omitempty"`
-}
-
-func (m *GreetRequest) Reset()                    { *m = GreetRequest{} }
-func (m *GreetRequest) String() string            { return proto.CompactTextString(m) }
-func (*GreetRequest) ProtoMessage()               {}
-func (*GreetRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
-
-func (m *GreetRequest) GetGreeting() *Greeting {
-	if m != nil {
-		return m.Greeting
-	}
-	return nil
-}
-
-type GreetResponse struct {
-	Result string `protobuf:"bytes,1,opt,name=result" json:"result,omitempty"`
-}
-
-func (m *GreetResponse) Reset()                    { *m = GreetResponse{} }
-func (m *GreetResponse) String() string            { return proto.CompactTextString(m) }
-func (*GreetResponse) ProtoMessage()               {}
-func (*GreetResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
-
-func (m *GreetResponse) GetResult() string {
-	if m != nil {
-		return m.Result
-	}
-	return ""
-}
-
+//
+// message GreetRequest{
+// Greeting greeting = 1 ;
+// }
+//
+// message GreetResponse{
+// string result = 1 ;
+// }
 type GreetManyTimesRequest struct {
 	Greeting *Greeting `protobuf:"bytes,1,opt,name=greeting" json:"greeting,omitempty"`
 }
@@ -100,7 +74,7 @@ type GreetManyTimesRequest struct {
 func (m *GreetManyTimesRequest) Reset()                    { *m = GreetManyTimesRequest{} }
 func (m *GreetManyTimesRequest) String() string            { return proto.CompactTextString(m) }
 func (*GreetManyTimesRequest) ProtoMessage()               {}
-func (*GreetManyTimesRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+func (*GreetManyTimesRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 func (m *GreetManyTimesRequest) GetGreeting() *Greeting {
 	if m != nil {
@@ -116,7 +90,7 @@ type GreetManyTimesResponse struct {
 func (m *GreetManyTimesResponse) Reset()                    { *m = GreetManyTimesResponse{} }
 func (m *GreetManyTimesResponse) String() string            { return proto.CompactTextString(m) }
 func (*GreetManyTimesResponse) ProtoMessage()               {}
-func (*GreetManyTimesResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+func (*GreetManyTimesResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
 func (m *GreetManyTimesResponse) GetResult() string {
 	if m != nil {
@@ -127,8 +101,6 @@ func (m *GreetManyTimesResponse) GetResult() string {
 
 func init() {
 	proto.RegisterType((*Greeting)(nil), "greet.Greeting")
-	proto.RegisterType((*GreetRequest)(nil), "greet.GreetRequest")
-	proto.RegisterType((*GreetResponse)(nil), "greet.GreetResponse")
 	proto.RegisterType((*GreetManyTimesRequest)(nil), "greet.GreetManyTimesRequest")
 	proto.RegisterType((*GreetManyTimesResponse)(nil), "greet.GreetManyTimesResponse")
 }
@@ -144,8 +116,6 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for GreetService service
 
 type GreetServiceClient interface {
-	// Unary
-	Greet(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetResponse, error)
 	// Server Streaming
 	GreetManyTimes(ctx context.Context, in *GreetManyTimesRequest, opts ...grpc.CallOption) (GreetService_GreetManyTimesClient, error)
 }
@@ -156,15 +126,6 @@ type greetServiceClient struct {
 
 func NewGreetServiceClient(cc *grpc.ClientConn) GreetServiceClient {
 	return &greetServiceClient{cc}
-}
-
-func (c *greetServiceClient) Greet(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetResponse, error) {
-	out := new(GreetResponse)
-	err := grpc.Invoke(ctx, "/greet.GreetService/Greet", in, out, c.cc, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *greetServiceClient) GreetManyTimes(ctx context.Context, in *GreetManyTimesRequest, opts ...grpc.CallOption) (GreetService_GreetManyTimesClient, error) {
@@ -202,32 +163,12 @@ func (x *greetServiceGreetManyTimesClient) Recv() (*GreetManyTimesResponse, erro
 // Server API for GreetService service
 
 type GreetServiceServer interface {
-	// Unary
-	Greet(context.Context, *GreetRequest) (*GreetResponse, error)
 	// Server Streaming
 	GreetManyTimes(*GreetManyTimesRequest, GreetService_GreetManyTimesServer) error
 }
 
 func RegisterGreetServiceServer(s *grpc.Server, srv GreetServiceServer) {
 	s.RegisterService(&_GreetService_serviceDesc, srv)
-}
-
-func _GreetService_Greet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GreetRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(GreetServiceServer).Greet(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/greet.GreetService/Greet",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreetServiceServer).Greet(ctx, req.(*GreetRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _GreetService_GreetManyTimes_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -254,12 +195,7 @@ func (x *greetServiceGreetManyTimesServer) Send(m *GreetManyTimesResponse) error
 var _GreetService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "greet.GreetService",
 	HandlerType: (*GreetServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "Greet",
-			Handler:    _GreetService_Greet_Handler,
-		},
-	},
+	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "GreetManyTimes",
@@ -273,21 +209,19 @@ var _GreetService_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("greet.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 245 bytes of a gzipped FileDescriptorProto
+	// 211 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x4e, 0x2f, 0x4a, 0x4d,
 	0x2d, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x73, 0x94, 0xdc, 0xb8, 0x38, 0xdc,
 	0x41, 0x8c, 0xcc, 0xbc, 0x74, 0x21, 0x59, 0x2e, 0xae, 0xb4, 0xcc, 0xa2, 0xe2, 0x92, 0xf8, 0xbc,
 	0xc4, 0xdc, 0x54, 0x09, 0x46, 0x05, 0x46, 0x0d, 0xce, 0x20, 0x4e, 0xb0, 0x88, 0x1f, 0x50, 0x40,
 	0x48, 0x9a, 0x8b, 0x33, 0x27, 0x11, 0x26, 0xcb, 0x04, 0x96, 0xe5, 0x00, 0x09, 0x80, 0x24, 0x95,
-	0xac, 0xb9, 0x78, 0xc0, 0xe6, 0x04, 0xa5, 0x16, 0x96, 0xa6, 0x16, 0x97, 0x08, 0x69, 0x73, 0x71,
-	0xa4, 0x43, 0xcd, 0x05, 0x9b, 0xc4, 0x6d, 0xc4, 0xaf, 0x07, 0xb1, 0x1e, 0x66, 0x5d, 0x10, 0x5c,
-	0x81, 0x92, 0x3a, 0x17, 0x2f, 0x54, 0x73, 0x71, 0x41, 0x7e, 0x5e, 0x71, 0xaa, 0x90, 0x18, 0x17,
-	0x5b, 0x51, 0x6a, 0x71, 0x69, 0x4e, 0x09, 0xd4, 0x15, 0x50, 0x9e, 0x92, 0x0b, 0x97, 0x28, 0x58,
-	0xa1, 0x6f, 0x62, 0x5e, 0x65, 0x48, 0x66, 0x6e, 0x6a, 0x31, 0x59, 0xd6, 0x19, 0x70, 0x89, 0xa1,
-	0x9b, 0x82, 0xdf, 0x5e, 0xa3, 0xe9, 0x8c, 0x50, 0xef, 0x05, 0xa7, 0x16, 0x95, 0x65, 0x26, 0xa7,
-	0x0a, 0x99, 0x70, 0xb1, 0x82, 0xf9, 0x42, 0xc2, 0xc8, 0xd6, 0x40, 0x5d, 0x23, 0x25, 0x82, 0x2a,
-	0x08, 0x31, 0x5c, 0x89, 0x41, 0x28, 0x90, 0x8b, 0x0f, 0xd5, 0x62, 0x21, 0x19, 0x64, 0x95, 0xe8,
-	0xbe, 0x92, 0x92, 0xc5, 0x21, 0x0b, 0x33, 0xd0, 0x80, 0xd1, 0x89, 0x33, 0x8a, 0x1d, 0xac, 0xa6,
-	0x20, 0x29, 0x89, 0x0d, 0x1c, 0xb1, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0xec, 0xd6, 0x7c,
-	0x8f, 0xe7, 0x01, 0x00, 0x00,
+	0x5c, 0xb8, 0x44, 0xc1, 0xe6, 0xf8, 0x26, 0xe6, 0x55, 0x86, 0x64, 0xe6, 0xa6, 0x16, 0x07, 0xa5,
+	0x16, 0x96, 0xa6, 0x16, 0x97, 0x08, 0x69, 0x73, 0x71, 0xa4, 0x43, 0x2d, 0x00, 0x1b, 0xc9, 0x6d,
+	0xc4, 0xaf, 0x07, 0x71, 0x07, 0xcc, 0xde, 0x20, 0xb8, 0x02, 0x25, 0x03, 0x2e, 0x31, 0x74, 0x53,
+	0x8a, 0x0b, 0xf2, 0xf3, 0x8a, 0x53, 0x85, 0xc4, 0xb8, 0xd8, 0x8a, 0x52, 0x8b, 0x4b, 0x73, 0x4a,
+	0xa0, 0xee, 0x82, 0xf2, 0x8c, 0x12, 0xb9, 0x78, 0xc0, 0x3a, 0x82, 0x53, 0x8b, 0xca, 0x32, 0x93,
+	0x53, 0x85, 0x02, 0xb9, 0xf8, 0x50, 0x4d, 0x10, 0x92, 0x41, 0xb6, 0x0e, 0xdd, 0x79, 0x52, 0xb2,
+	0x38, 0x64, 0x21, 0xd6, 0x2a, 0x31, 0x18, 0x30, 0x3a, 0x71, 0x46, 0xb1, 0x83, 0xd5, 0x14, 0x24,
+	0x25, 0xb1, 0x81, 0xc3, 0xce, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x3f, 0xa3, 0x74, 0xd2, 0x4a,
+	0x01, 0x00, 0x00,
 }

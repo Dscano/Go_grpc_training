@@ -6,28 +6,35 @@ import (
 	"log"
 	"io"
 	"google.golang.org/grpc"
-	"github.com/grpc-client-streaming/greetpb_client_streaming"
+	"github.com/grpc-bidirectional-streaming/greetpb_bidirectional"
 )
 
 //this is the server "object"
 type server struct{}
-func(*server) LongGreet( stream greetpb.GreetService_LongGreetServer) error{
-	fmt.Printf("LongGreet function was invoked with a streaming request\n")
+
+func(*server) GreetEveryone( stream greetpb.GreetService_GreetEveryoneServer) error{
+	fmt.Printf("GreetEveryone function was invoked with a streaming request\n")
+
 	result := ""
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
 			// we have finished reading the client stream
-			return stream.SendAndClose(&greetpb.LongGreetResponse{
-				Result: result,
-			})
+			return nil
 		}
 		if err != nil {
 			log.Fatalf("Error while reading client stream: %v", err)
+			return err
 		}
-
 		firstName := req.GetGreeting().GetFirstName()
-		result += "Hello " + firstName + "! "
+		result   = "Hello " + firstName + "! "
+		sendErr := stream.Send(&greetpb.GreetEveryoneResponse{
+			Result: result,
+		})
+		if sendErr != nil{
+			log.Fatalf("Error while sending data to client: %v", err)
+			return err
+		}
 	}
 
 }

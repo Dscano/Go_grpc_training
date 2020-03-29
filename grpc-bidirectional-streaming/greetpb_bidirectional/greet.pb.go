@@ -10,8 +10,8 @@ It is generated from these files:
 
 It has these top-level messages:
 	Greeting
-	LongGreetRequest
-	LongGreetResponse
+	GreetEveryoneRequest
+	GreetEveryoneResponse
 */
 package greetpb
 
@@ -59,32 +59,56 @@ func (m *Greeting) GetLastName() string {
 	return ""
 }
 
-type LongGreetRequest struct {
+//
+// message GreetRequest{
+// Greeting greeting = 1 ;
+// }
+//
+// message GreetResponse{
+// string result = 1 ;
+// }
+//
+// message GreetManyTimesRequest{
+// Greeting greeting = 1 ;
+// }
+//
+// message GreetManyTimesResponse{
+// string result = 1 ;
+// }
+//
+// message LongGreetRequest{
+// Greeting greeting = 1 ;
+// }
+//
+// message LongGreetResponse{
+// string result = 1 ;
+// }
+type GreetEveryoneRequest struct {
 	Greeting *Greeting `protobuf:"bytes,1,opt,name=greeting" json:"greeting,omitempty"`
 }
 
-func (m *LongGreetRequest) Reset()                    { *m = LongGreetRequest{} }
-func (m *LongGreetRequest) String() string            { return proto.CompactTextString(m) }
-func (*LongGreetRequest) ProtoMessage()               {}
-func (*LongGreetRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (m *GreetEveryoneRequest) Reset()                    { *m = GreetEveryoneRequest{} }
+func (m *GreetEveryoneRequest) String() string            { return proto.CompactTextString(m) }
+func (*GreetEveryoneRequest) ProtoMessage()               {}
+func (*GreetEveryoneRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
-func (m *LongGreetRequest) GetGreeting() *Greeting {
+func (m *GreetEveryoneRequest) GetGreeting() *Greeting {
 	if m != nil {
 		return m.Greeting
 	}
 	return nil
 }
 
-type LongGreetResponse struct {
+type GreetEveryoneResponse struct {
 	Result string `protobuf:"bytes,1,opt,name=result" json:"result,omitempty"`
 }
 
-func (m *LongGreetResponse) Reset()                    { *m = LongGreetResponse{} }
-func (m *LongGreetResponse) String() string            { return proto.CompactTextString(m) }
-func (*LongGreetResponse) ProtoMessage()               {}
-func (*LongGreetResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+func (m *GreetEveryoneResponse) Reset()                    { *m = GreetEveryoneResponse{} }
+func (m *GreetEveryoneResponse) String() string            { return proto.CompactTextString(m) }
+func (*GreetEveryoneResponse) ProtoMessage()               {}
+func (*GreetEveryoneResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
-func (m *LongGreetResponse) GetResult() string {
+func (m *GreetEveryoneResponse) GetResult() string {
 	if m != nil {
 		return m.Result
 	}
@@ -93,8 +117,8 @@ func (m *LongGreetResponse) GetResult() string {
 
 func init() {
 	proto.RegisterType((*Greeting)(nil), "greet.Greeting")
-	proto.RegisterType((*LongGreetRequest)(nil), "greet.LongGreetRequest")
-	proto.RegisterType((*LongGreetResponse)(nil), "greet.LongGreetResponse")
+	proto.RegisterType((*GreetEveryoneRequest)(nil), "greet.GreetEveryoneRequest")
+	proto.RegisterType((*GreetEveryoneResponse)(nil), "greet.GreetEveryoneResponse")
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -108,8 +132,8 @@ const _ = grpc.SupportPackageIsVersion4
 // Client API for GreetService service
 
 type GreetServiceClient interface {
-	// Client Streaming
-	LongGreet(ctx context.Context, opts ...grpc.CallOption) (GreetService_LongGreetClient, error)
+	// BiDi Streaming
+	GreetEveryone(ctx context.Context, opts ...grpc.CallOption) (GreetService_GreetEveryoneClient, error)
 }
 
 type greetServiceClient struct {
@@ -120,34 +144,31 @@ func NewGreetServiceClient(cc *grpc.ClientConn) GreetServiceClient {
 	return &greetServiceClient{cc}
 }
 
-func (c *greetServiceClient) LongGreet(ctx context.Context, opts ...grpc.CallOption) (GreetService_LongGreetClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_GreetService_serviceDesc.Streams[0], c.cc, "/greet.GreetService/LongGreet", opts...)
+func (c *greetServiceClient) GreetEveryone(ctx context.Context, opts ...grpc.CallOption) (GreetService_GreetEveryoneClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_GreetService_serviceDesc.Streams[0], c.cc, "/greet.GreetService/GreetEveryone", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &greetServiceLongGreetClient{stream}
+	x := &greetServiceGreetEveryoneClient{stream}
 	return x, nil
 }
 
-type GreetService_LongGreetClient interface {
-	Send(*LongGreetRequest) error
-	CloseAndRecv() (*LongGreetResponse, error)
+type GreetService_GreetEveryoneClient interface {
+	Send(*GreetEveryoneRequest) error
+	Recv() (*GreetEveryoneResponse, error)
 	grpc.ClientStream
 }
 
-type greetServiceLongGreetClient struct {
+type greetServiceGreetEveryoneClient struct {
 	grpc.ClientStream
 }
 
-func (x *greetServiceLongGreetClient) Send(m *LongGreetRequest) error {
+func (x *greetServiceGreetEveryoneClient) Send(m *GreetEveryoneRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *greetServiceLongGreetClient) CloseAndRecv() (*LongGreetResponse, error) {
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	m := new(LongGreetResponse)
+func (x *greetServiceGreetEveryoneClient) Recv() (*GreetEveryoneResponse, error) {
+	m := new(GreetEveryoneResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -157,34 +178,34 @@ func (x *greetServiceLongGreetClient) CloseAndRecv() (*LongGreetResponse, error)
 // Server API for GreetService service
 
 type GreetServiceServer interface {
-	// Client Streaming
-	LongGreet(GreetService_LongGreetServer) error
+	// BiDi Streaming
+	GreetEveryone(GreetService_GreetEveryoneServer) error
 }
 
 func RegisterGreetServiceServer(s *grpc.Server, srv GreetServiceServer) {
 	s.RegisterService(&_GreetService_serviceDesc, srv)
 }
 
-func _GreetService_LongGreet_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(GreetServiceServer).LongGreet(&greetServiceLongGreetServer{stream})
+func _GreetService_GreetEveryone_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GreetServiceServer).GreetEveryone(&greetServiceGreetEveryoneServer{stream})
 }
 
-type GreetService_LongGreetServer interface {
-	SendAndClose(*LongGreetResponse) error
-	Recv() (*LongGreetRequest, error)
+type GreetService_GreetEveryoneServer interface {
+	Send(*GreetEveryoneResponse) error
+	Recv() (*GreetEveryoneRequest, error)
 	grpc.ServerStream
 }
 
-type greetServiceLongGreetServer struct {
+type greetServiceGreetEveryoneServer struct {
 	grpc.ServerStream
 }
 
-func (x *greetServiceLongGreetServer) SendAndClose(m *LongGreetResponse) error {
+func (x *greetServiceGreetEveryoneServer) Send(m *GreetEveryoneResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *greetServiceLongGreetServer) Recv() (*LongGreetRequest, error) {
-	m := new(LongGreetRequest)
+func (x *greetServiceGreetEveryoneServer) Recv() (*GreetEveryoneRequest, error) {
+	m := new(GreetEveryoneRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -197,8 +218,9 @@ var _GreetService_serviceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "LongGreet",
-			Handler:       _GreetService_LongGreet_Handler,
+			StreamName:    "GreetEveryone",
+			Handler:       _GreetService_GreetEveryone_Handler,
+			ServerStreams: true,
 			ClientStreams: true,
 		},
 	},
@@ -208,18 +230,19 @@ var _GreetService_serviceDesc = grpc.ServiceDesc{
 func init() { proto.RegisterFile("greet.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 206 bytes of a gzipped FileDescriptorProto
+	// 212 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x4e, 0x2f, 0x4a, 0x4d,
 	0x2d, 0xd1, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x73, 0x94, 0xdc, 0xb8, 0x38, 0xdc,
 	0x41, 0x8c, 0xcc, 0xbc, 0x74, 0x21, 0x59, 0x2e, 0xae, 0xb4, 0xcc, 0xa2, 0xe2, 0x92, 0xf8, 0xbc,
 	0xc4, 0xdc, 0x54, 0x09, 0x46, 0x05, 0x46, 0x0d, 0xce, 0x20, 0x4e, 0xb0, 0x88, 0x1f, 0x50, 0x40,
 	0x48, 0x9a, 0x8b, 0x33, 0x27, 0x11, 0x26, 0xcb, 0x04, 0x96, 0xe5, 0x00, 0x09, 0x80, 0x24, 0x95,
-	0xec, 0xb9, 0x04, 0x7c, 0xf2, 0xf3, 0xd2, 0xc1, 0x66, 0x05, 0xa5, 0x16, 0x96, 0xa6, 0x16, 0x97,
-	0x08, 0x69, 0x73, 0x71, 0xa4, 0x43, 0xcd, 0x06, 0x9b, 0xc6, 0x6d, 0xc4, 0xaf, 0x07, 0x71, 0x02,
-	0xcc, 0xca, 0x20, 0xb8, 0x02, 0x25, 0x6d, 0x2e, 0x41, 0x24, 0x03, 0x8a, 0x0b, 0xf2, 0xf3, 0x8a,
-	0x53, 0x85, 0xc4, 0xb8, 0xd8, 0x8a, 0x52, 0x8b, 0x4b, 0x73, 0x4a, 0xa0, 0xae, 0x81, 0xf2, 0x8c,
-	0x82, 0xb8, 0x78, 0xc0, 0x0a, 0x83, 0x53, 0x8b, 0xca, 0x32, 0x93, 0x53, 0x85, 0x9c, 0xb8, 0x38,
-	0xe1, 0x9a, 0x85, 0xc4, 0xa1, 0x96, 0xa0, 0xbb, 0x47, 0x4a, 0x02, 0x53, 0x02, 0x62, 0x8f, 0x12,
-	0x83, 0x06, 0xa3, 0x13, 0x67, 0x14, 0x3b, 0x58, 0xba, 0x20, 0x29, 0x89, 0x0d, 0x1c, 0x44, 0xc6,
-	0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x15, 0xcb, 0x39, 0xc5, 0x31, 0x01, 0x00, 0x00,
+	0x9c, 0xb9, 0x44, 0xc0, 0xe6, 0xb8, 0x96, 0xa5, 0x16, 0x55, 0xe6, 0xe7, 0xa5, 0x06, 0xa5, 0x16,
+	0x96, 0xa6, 0x16, 0x97, 0x08, 0x69, 0x73, 0x71, 0xa4, 0x43, 0xcd, 0x07, 0x9b, 0xc8, 0x6d, 0xc4,
+	0xaf, 0x07, 0x71, 0x06, 0xcc, 0xda, 0x20, 0xb8, 0x02, 0x25, 0x7d, 0x2e, 0x51, 0x34, 0x43, 0x8a,
+	0x0b, 0xf2, 0xf3, 0x8a, 0x53, 0x85, 0xc4, 0xb8, 0xd8, 0x8a, 0x52, 0x8b, 0x4b, 0x73, 0x4a, 0xa0,
+	0xae, 0x82, 0xf2, 0x8c, 0x12, 0xb8, 0x78, 0xc0, 0x1a, 0x82, 0x53, 0x8b, 0xca, 0x32, 0x93, 0x53,
+	0x85, 0x02, 0xb8, 0x78, 0x51, 0x0c, 0x10, 0x92, 0x46, 0xb6, 0x0c, 0xcd, 0x6d, 0x52, 0x32, 0xd8,
+	0x25, 0x21, 0x76, 0x2a, 0x31, 0x68, 0x30, 0x1a, 0x30, 0x3a, 0x71, 0x46, 0xb1, 0x83, 0x15, 0x15,
+	0x24, 0x25, 0xb1, 0x81, 0x03, 0xce, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff, 0x9d, 0xd7, 0x48, 0xdb,
+	0x47, 0x01, 0x00, 0x00,
 }

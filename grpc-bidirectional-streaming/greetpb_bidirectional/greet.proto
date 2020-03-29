@@ -8,16 +8,17 @@ message Greeting{
 	string last_name = 2;
 }
 
-message LongGreetRequest{
+message  GreetEveryoneRequest{
   Greeting greeting = 1 ;
 }
 
-message LongGreetResponse{
+message GreetEveryoneResponse{
   string result = 1 ;
 }
 
-service GreetService{
 
-	//Client Streaming
-	rpc LongGreet( stream LongGreetRequest) returns(LongGreetResponse) {};
+service GreetService{
+	//BiDi Streaming
+	rpc GreetEveryone( stream GreetEveryoneRequest) returns( stream GreetEveryoneResponse) {};
+
 }

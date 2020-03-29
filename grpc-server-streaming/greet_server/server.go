@@ -4,7 +4,6 @@ import (
 	"fmt" 
 	"net"
 	"log"
-	"context"
 	"strconv"
 	"time"
 	"google.golang.org/grpc"
@@ -13,17 +12,6 @@ import (
 
 //this is the server "object"
 type server struct{}
-
-func(*server) Greet(ctx context.Context, req *greetpb.GreetRequest) (*greetpb.GreetResponse, error){
-	fmt.Println("Greet function was invoked with %v\n", req)
-	firstName := req.GetGreeting().GetFirstName()
-	result := "Hello " + firstName
-	res := &greetpb.GreetResponse{
-		Result: result,
-
-	}
-	return res, nil
-}
 
 func (*server) GreetManyTimes(req *greetpb.GreetManyTimesRequest, stream greetpb.GreetService_GreetManyTimesServer) error {
 	fmt.Println("GreetManyTimes function was invoked with %v\n", req)
