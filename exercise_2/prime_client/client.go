@@ -35,7 +35,7 @@ func doServerStreaming(c primepb.PrimeServiceClient){
 
 	resStream, err := c.PrimeStreaming(context.Background(),req)
 	if err != nil{
-		log.Fatalf("error while calling GreetManyTimes RpC:%v", err)
+		log.Fatalf("error while calling Prime RpC:%v", err)
 	}
 	for{
 			msg, err :=resStream.Recv()
@@ -47,6 +47,6 @@ func doServerStreaming(c primepb.PrimeServiceClient){
 			log.Fatalf("error while reading stream:%v", err)
 		}
 
-		log.Printf("Response from GreetManyTimes: %v", msg.GetResult())
+		log.Printf("Response from Prime Streaming: %v", msg.GetResult())
 	}
 }

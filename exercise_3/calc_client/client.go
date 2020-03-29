@@ -45,7 +45,7 @@ func doCalcAverage(c calcpb.CalcServiceClient){
 	
 	res, err := stream.CloseAndRecv()
 	if err != nil{
-		log.Fatalf("error while recivibg response from  LongGreet:%v", err)
+		log.Fatalf("error while recivibg response from Calc:%v", err)
 
 	}
 

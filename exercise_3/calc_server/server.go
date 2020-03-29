@@ -12,17 +12,6 @@ import (
 
 //this is the server "object"
 type server struct{}
-func(*server) Calc (ctx context.Context, req *calcpb.CalcRequest) (*calcpb.CalcResponse, error){
-	fmt.Printf("Received Sum RPC: %v\n", req)
-	firstNumber := req.FirstNumber
-	secondNumber := req.SecondNumber
-	result := firstNumber + secondNumber
-	res := &calcpb.CalcResponse{
-		Result: result,
-
-	}
-	return res, nil
-}
 
 func(*server) ComputeAverage( stream calcpb.CalcService_ComputeAverageServer) error{
 	fmt.Printf("ComputeAverage function was invoked with a streaming request\n")

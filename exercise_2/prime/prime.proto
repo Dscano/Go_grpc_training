@@ -7,14 +7,6 @@ message Prime{
         int32 number = 1;
 }
 
-message PrimeRequest{
-	Prime priming= 1 ;
-}
-
-message PrimeResponse{
-	int32 result = 1 ;
-}
-
 message PrimeStreamingRequest{
 	Prime priming= 1 ;
 }
@@ -24,8 +16,6 @@ message PrimeStreamingResponse{
 }
 
 service PrimeService{
-	//Unary
-	rpc Prime(PrimeRequest) returns (PrimeResponse){};
 
 	//Server Streaming
 	rpc PrimeStreaming(PrimeStreamingRequest) returns (stream PrimeStreamingResponse){};

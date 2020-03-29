@@ -12,17 +12,6 @@ import (
 //this is the server "object"
 type server struct{}
 
-func(*server) Prime(ctx context.Context, req *primepb.PrimeRequest) (*primepb.PrimeResponse, error){
-	fmt.Println("Prime function was invoked with %v\n", req)
-	number := req.GetPriming().GetNumber()
-	res := &primepb.PrimeResponse{
-		Result: number,
-
-	}
-	return res, nil
-}
-
-
 func (*server)  PrimeStreaming(req *primepb.PrimeStreamingRequest, stream primepb.PrimeService_PrimeStreamingServer) error {
 	fmt.Println("Prime function was invoked with %v\n", req)
 	number := req.GetPriming().GetNumber()
