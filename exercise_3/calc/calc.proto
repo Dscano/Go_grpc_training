@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package greet;
+option go_package ="calcpb";
+
+message CalcRequest{
+	int32 first_number = 1;
+	int32 second_number = 2;
+}
+
+message CalcResponse{
+	int32 result = 1 ;
+}
+
+message ComputeAverageRequest{
+  	int32 number = 1 ;
+}
+
+message ComputeAverageResponse{
+  	double number = 1 ;
+}
+
+
+service CalcService{
+	//Unary
+	rpc Calc(CalcRequest) returns (CalcResponse){};
+
+	//Server Streaming
+	//rpc CalcStreaming(CalcStreamingRequest) returns (stream CalcStreamingResponse){};
+
+	//Client Streaming
+	rpc ComputeAverage( stream ComputeAverageRequest) returns(ComputeAverageResponse) {};
+}
