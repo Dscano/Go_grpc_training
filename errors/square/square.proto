@@ -19,5 +19,5 @@ message SquareRootResponse{
 service SquareRootService{
 
 	//Unary
-	rpc SquareRoot( SquareRootRequest) returns(SquareRootResponse) {};
+	rpc SquareRoot(SquareRootRequest) returns(SquareRootResponse) {};
 }
